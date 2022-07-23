@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": {
+            "@models/*": [ "./models/*"],
+            "@root/*": [ "./*" ],
+            "@lib/*": [ "./lib/*" ],
+            "@routes/*": [ "./routes/*" ]
+		},
+
+		// Remix takes care of building everything in `remix build`.
+		"noEmit": true,
+		"allowJs": true,
+		"forceConsistentCasingInFileNames": true
+	}
+}

@@ -1,0 +1,17 @@
+{
+  "name": "pay",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-server": "NODE_ENV=development nodemon",
+    "build": "remix build",
+    "jobs": "node jobs/index.js",
+    "dev:remix": "remix watch",
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
