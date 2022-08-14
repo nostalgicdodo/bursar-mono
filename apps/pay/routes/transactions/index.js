@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Institute = require('@models/institute');
 const Transaction = require('@models/transaction');
 const { jwtVerify } = require('@lib/authentication');
+const { registerTransactionEvent } = require('@lib/helpers');
 
 function forceRegenerateSession(req){
 	return new Promise(resolve => {
@@ -49,6 +50,11 @@ router.get('/init', async (req, res) => {
 
 		if (req.session.transaction.doc.type === 0) {
 			return res.redirect('/transaction/direct');
+			return registerTransactionEvent({
+				trnId: transactionId,
+				type: 'session-created',
+				context: transaction.doc.Item,
+			});
 		}
 	}
 	res.redirect('/404');

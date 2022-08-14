@@ -5,12 +5,42 @@ const { performCKYC,
 	validateAadhaarDetailsGenerateOTP,
 	validateAadhaarDetailsValidateOTP,
 	generateCreditReport } = require('@lib/decentro');
-const {transactionUserDetailsValidation} = require('./validations');
+const {transactionUserDetailsValidation, registerEventValidation} = require('./validations');
 const PURPOSE = 'For education loan disbursement';
 const { generateTransactionSession } = require('@lib/juspay');
-const { checkAndUpdateTrn } = require('@lib/helpers');
+const { checkAndUpdateTrn, registerTransactionEvent } = require('@lib/helpers');
 const WEBHOOK_JUSPAY_STATUS = ['CHARGED'];
 const router = require('express').Router();
+
+router.post('/juspay_status_webhook', async (req, res) => {
+	if(req.body?.content?.order?.id && WEBHOOK_JUSPAY_STATUS.indexOf(req.body?.content?.order?.status) > -1){
+		const tnx = (await (new Transaction().find({
+			noPage: true,
+			IndexName: 'pgOrderId-index',
+			KeyConditionExpression: '#pgo = :pgo',
+			FilterExpression: 'pgInitiationDetails.id = :v',
+			ExpressionAttributeNames: {'#pgo': 'pgOrderId'},
+			ExpressionAttributeValues: {
+				':v': req.body.content.order.id,
+				':pgo': req.body.content.order.order_id,
+			}
+		})))?.Items?.[0];
+		if(tnx && ['success', 'failure'].indexOf(tnx.status) === -1){
+			registerTransactionEvent({
+				trnId: tnx.id,
+				type: 'webhook',
+				context: req.body,
+			});
+			await checkAndUpdateTrn({
+				trn: tnx,
+				redirect: false,
+				from: 'webhook',
+			});
+			// await updateTransactionStatus(tnx, statusTranslate(req.body.content.order.status), req.body.content, true);
+		}
+	}
+	res.send('OK');
+});
 
 router.use('/', (req, res, next) => {
 	if(req.session.transaction){
@@ -29,16 +59,32 @@ router.get('/details', (req, res) => {
 });
 
 router.get('/status', async (req, res) => {
-	const doc = req.session.transaction?.doc;
-	if(doc){
-		const transaction = new Transaction();
-		return res.json({
-			status: (await transaction.findById({
-				id: doc.id,
-				instituteId: doc.instituteId,
-				refId: doc.refId,
-			})).Item?.status,
+	if (!req.session) {
+		return res.status(401).json({ message: "Unauthorized." });
+	}
+	if (!req.session.transaction) {
+		return res.status(403).json({ message: "Forbidden." });
+	}
+
+	const doc = req.session.transaction.doc;
+	const transaction = new Transaction();
+	return res.json({
+		status: (await transaction.findById({
+			id: doc.id,
+			instituteId: doc.instituteId,
+			refId: doc.refId,
+		})).Item?.status,
+	});
+});
+
+router.post('/register_event', (req, res) => {
+	if(registerEventValidation(req.body)){
+		registerTransactionEvent({
+			trnId: req.session.transaction.doc.id,
+			type: req.body.type,
+			context: req.body.context,
 		});
+		return res.send('OK');
 	}
 	res.redirect('/404');
 });
@@ -56,9 +102,15 @@ router.post('/juspay_callback', async (req, res) => {
 		...req.session.transaction.doc,
 		pgCallback: req.body,
 	};
+	registerTransactionEvent({
+		trnId: doc.id,
+		type: 'juspay-callback',
+		context: req.body,
+	});
 	doc.status = await checkAndUpdateTrn({
 		trn: doc,
 		redirect: false,
+		from: 'pgcallback'
 	});
 	req.session.transaction.doc = doc;
 	req.session.save();
@@ -66,24 +118,6 @@ router.post('/juspay_callback', async (req, res) => {
 	// await transaction.save(doc);
 	// await updateTransactionStatus(doc, doc.status, doc.pgCallback, false);
 	// req.session.transaction.pgRedirect = false;
-});
-
-router.post('/juspay_status_webhook', async (req, res) => {
-	if(req.body?.content?.order?.id && WEBHOOK_JUSPAY_STATUS.indexOf(req.body?.content?.order?.status) > -1){
-		const tnx = await (new Transaction().find({
-			noPage: true,
-			FilterExpression: 'pgInitiationDetails.id = :v',
-			ExpressionAttributeValues: {':v': req.body.content.order.id}
-		}))?.Items?.[0];
-		if(tnx && ['success', 'failure'].indexOf(tnx.status) === -1){
-			await checkAndUpdateTrn({
-				trn: tnx,
-				redirect: false,
-			});
-			// await updateTransactionStatus(tnx, statusTranslate(req.body.content.order.status), req.body.content, true);
-		}
-	}
-	res.send('OK');
 });
 
 router.get('/juspay_initiate_transaction', async (req, res) => {
@@ -115,6 +149,11 @@ router.get('/juspay_initiate_transaction', async (req, res) => {
 	// req.session.transaction.pgRedirect = true;
 	req.session.save();
 	res.json({transactionURL: doc.pgInitiationDetails.payment_links?.web || null});
+	registerTransactionEvent({
+		trnId: transactionId,
+		type: 'juspay-initiated',
+		context: doc.pgInitiationDetails,
+	});
 });
 
 function getPGOrderId(instituteShortId, transactionId){

@@ -4,6 +4,7 @@ const Transaction = require('@models/transaction');
 const { transactionRequestValidation,
 	transactionDetailsValidation } = require('./validations');
 const { jwtSign } = require('@lib/authentication');
+const { registerTransactionEvent } = require('@lib/helpers');
 
 async function generateTransactionUrl({protocol, hostname, id, instituteId, refId }){
 	return `${ protocol }://${ hostname }/transaction/init?request=${ await jwtSign({ id, instituteId, refId }) }`;
@@ -39,13 +40,18 @@ router.post('/:instituteId/create_transaction', authenticateInstitute, async (re
 	try {
 		const transaction = new Transaction();
 		if(await transaction.create(transactionBody)){
-			return res.json({
+			res.json({
 				doc: transaction.doc,
 				redirectUrl: await generateTransactionUrl({
 					...transaction.doc,
 					protocol: req.protocol,
 					hostname: req.get('host'),
 				})
+			});
+			return registerTransactionEvent({
+				trnId: transaction.doc.id,
+				type: 'created',
+				context: transaction.doc,
 			});
 		}
 		return res.status(400).json({

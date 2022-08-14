@@ -112,9 +112,13 @@ class Transaction extends DbHandler{
 		instituteId = false,
 		limit = 15,
 		next,
+		withPage = true,
 		FilterExpression,
 		ExpressionAttributeNames,
 		ExpressionAttributeValues,
+		IndexName,
+		KeyConditionExpression,
+		ScanIndexForward,
 	}){
 		if(instituteId){
 			return super.list({
@@ -131,12 +135,16 @@ class Transaction extends DbHandler{
 				ExclusiveStartKey: next,
 			});
 		}
-		return super.list({
+		return super.find({
 			Limit: limit,
+			withPage,
 			ExclusiveStartKey: next,
 			ExpressionAttributeNames,
 			ExpressionAttributeValues,
 			FilterExpression,
+			IndexName,
+			KeyConditionExpression,
+			ScanIndexForward,
 		});
 	}
 

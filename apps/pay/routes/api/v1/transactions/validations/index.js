@@ -14,6 +14,15 @@ function transactionUserDetailsValidation({
 	);
 }
 
+function registerEventValidation({
+	type,
+	context,
+}){
+	return typeof type === 'string' &&
+		typeof context === 'object';
+}
+
 module.exports = {
 	transactionUserDetailsValidation,
+	registerEventValidation,
 };
