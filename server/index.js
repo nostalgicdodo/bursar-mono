@@ -81,7 +81,7 @@ function initDB(){
 }
 
 function init(){
-	require('dotenv').config();
+	require('dotenv').config({path:`${__dirname}/../.env`});
 	redisClient = createClient({
 		legacyMode: true,
 		url: process.env.REDIS_CONNECTION_STRING,
