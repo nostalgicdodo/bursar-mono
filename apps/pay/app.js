@@ -1,4 +1,4 @@
-require('module-alias/register');
+require('module-alias')(`${__dirname}/../..`);
 const { init, isDev, getServerPort, getHostname } = require('@root/server');
 init();
 const express = require('express');
