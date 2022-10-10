@@ -43,7 +43,7 @@ router.use((req, res, next) => {
 router.use('/api', require('./api'));
 router.use('/_d', require('@routes/diagnostics'));
 router.use('/', require('./authentication'));
-// router.use(require('./frontend'));
+router.use(require('./frontend'));
 
 if(isProduction()){
 	// eslint-disable-next-line no-unused-vars
