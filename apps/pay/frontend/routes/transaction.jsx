@@ -8,7 +8,7 @@ import {
 
 import pageStyles from "~/css/pages/transaction-home.css"
 
-const { Rupee } = require( "~/lib/currency.js" )
+const { Rupee } = require( "@ui/utils/currency.js" )
 
 
 
