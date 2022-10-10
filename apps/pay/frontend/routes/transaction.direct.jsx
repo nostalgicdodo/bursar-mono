@@ -5,7 +5,7 @@ import {
 } from "@remix-run/react"
 import * as React from "react"
 
-import { useHTTP } from "~/lib/react-hooks/http"
+import { useHTTP } from "@ui/hooks/http"
 import { LoadingIndicator } from "@ui/components/loading-indicator"
 
 import stylesheet from "~/routes/transaction.direct.css"
