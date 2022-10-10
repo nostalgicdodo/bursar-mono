@@ -42,7 +42,7 @@ router.use((req, res, next) => {
 
 router.use('/api', require('./api'));
 router.use('/_d', require('@routes/diagnostics'));
-router.use('/', require('./authentication'));
+router.use('/auth', require('./authentication'));
 router.use(require('./frontend'));
 
 if(isProduction()){
