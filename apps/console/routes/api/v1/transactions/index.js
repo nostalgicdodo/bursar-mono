@@ -34,6 +34,23 @@ router.get('/list', async (req, res) => {
 	res.setHeader('Content-Disposition', 'attachment;filename=payments_export.csv');
 	res.send(getExportCSV((await trn.list(query)).Items));
 });
+
+router.get('/query', async (req, res) => {
+	const trn = new Transaction();
+
+	res.json(await trn.find({
+		IndexName: 'instituteId-userId-index',
+		KeyConditionExpression: '#iid = :iid AND #uid = :uid',
+		ExpressionAttributeNames: {
+			'#iid': 'instituteId',
+			'#uid': 'userId',
+		},
+		ExpressionAttributeValues: {
+			':iid': req.session?.user?.instituteId || req.query?.instituteId,
+			':uid': req.query.s,
+		},
+	}));
+});
 	}
 
 function getFilterQuery({
