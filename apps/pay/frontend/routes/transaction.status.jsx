@@ -9,7 +9,7 @@ import * as React from "react"
 import Transaction from "~/server/models/transaction.server"
 
 import { useTimeHasElapsed } from "~/lib/react-hooks/time"
-import LoadingIndicator from "~/components/loading-indicator"
+import { LoadingIndicator } from "@ui/components/loading-indicator"
 
 import stylesheet from "~/routes/transaction.direct.css"
 
@@ -111,7 +111,10 @@ export default function () {
 		</div>
 		<div className="main-content">
 			<div style={ { display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", marginTop: "var(--space-100)" } }>
-				{ fetcher.data ? null : <LoadingIndicator message="Verifying payment..." /> }
+				{ !fetcher.data && <>
+					<LoadingIndicator />
+					<div className="h3 text-center text-indigo-3">Verifying payment...</div>
+				</> }
 				<div className="text-center text-indigo-3">
 					{ fetcher.data?.status === "success" ? <><span className="h4">Your payment was successful.</span>{ redirectMessage }</> : null }
 					{ fetcher.data?.status === "failed" ? <><span className="h4">There was an issue with your payment.<br />Please try again later.</span>{ redirectMessage }</> : null }
