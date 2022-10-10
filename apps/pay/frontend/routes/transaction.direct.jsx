@@ -6,7 +6,7 @@ import {
 import * as React from "react"
 
 import { useHTTP } from "~/lib/react-hooks/http"
-import LoadingIndicator from "~/components/loading-indicator"
+import { LoadingIndicator } from "@ui/components/loading-indicator"
 
 import stylesheet from "~/routes/transaction.direct.css"
 
@@ -59,7 +59,7 @@ export default function () {
 			</div>
 			<div className="main-content">
 				<div className={ [ "loading-indicator-container" + (iframeLoaded ? " fade-out" : "") ] }>
-					<LoadingIndicator message="" />
+					<LoadingIndicator />
 				</div>
 				<div className={ [ "iframe-container" + (iframeLoaded ? " fade-in" : "") ] }>
 					{ http.data ? <iframe src={ http.data.transactionURL } onLoad={ () => setIframeLoaded( true ) } /> : null }

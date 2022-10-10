@@ -10,11 +10,12 @@ import {
 	useCatch
 } from "@remix-run/react";
 
-import normalizeStyles from "~/css/1_normalize.css"
-import baseStyles from "~/css/2_base.css"
-import gridStyles from "~/css/3_grid.css"
-import helperStyles from "~/css/4_helper.css"
-import stylescapeStyles from "~/css/5_stylescape.css"
+import normalizeStyles from "@ui/css/1_normalize.css"
+import baseStyles from "@ui/css/2_base.css"
+import gridStyles from "@ui/css/3_grid.css"
+import helperStyles from "@ui/css/4_helper.css"
+import stylescapeStyles from "@ui/css/5_stylescape.css"
+import { styles as loadingIndicatorStyles } from "@ui/components/loading-indicator"
 
 
 
