@@ -8,7 +8,7 @@ import * as React from "react"
 
 import Transaction from "~/server/models/transaction.server"
 
-import { useTimeHasElapsed } from "~/lib/react-hooks/time"
+import { useTimeHasElapsed } from "@ui/hooks/time"
 import { LoadingIndicator } from "@ui/components/loading-indicator"
 
 import stylesheet from "~/routes/transaction.direct.css"
