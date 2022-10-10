@@ -26,8 +26,8 @@ router.post('/login', async (req, res) => {
 	// 	return res.redirect('/');
 	// }
 	const user = new User();
-	if(await user.authenticate(req.body.userid, req.body.password)){
-		await forceRegenerateSession();
+	if(await user.authenticate(req.body.userId, req.body.password)){
+		await forceRegenerateSession(req);
 		req.session.user = user.doc.Item;
 		(new UserLogin()).create({
 			id: req.body.userid,
