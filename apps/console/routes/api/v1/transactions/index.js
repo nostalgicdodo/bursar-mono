@@ -1,3 +1,4 @@
+const { parse } = require('json2csv');
 const Transaction = require('@models/transaction');
 // const {transactionUserDetailsValidation} = require('./validations');
 const router = require('express').Router();
@@ -125,6 +126,45 @@ function getFilterQuery({
 		}
 	}
 	return query;
+}
+
+function getExportCSV(json){
+	return parse(json, {
+		fields: [
+			{
+				label: 'Initiated At',
+				value: 'createdAt',
+			},
+			{
+				label: 'Name',
+				value: 'userName',
+			},
+			{
+				label: 'Student Id',
+				value: 'userId',
+			},
+			{
+				label: 'Status',
+				value: 'status',
+			},
+			{
+				label: 'PG Order Id',
+				value: 'pgOrderId',
+			},
+			{
+				label: 'Amount',
+				value: 'amount',
+			},
+			{
+				label: 'Updated At',
+				value: 'updatedAt',
+			},
+			{
+				label: 'Reference Id',
+				value: 'refId',
+			},
+		]
+	});
 }
 
 module.exports = router;
