@@ -22,9 +22,9 @@ function forceRegenerateSession(req){
 }
 
 router.post('/login', async (req, res) => {
-	if(req.session.user){
-		res.redirect('/');
-	}
+	// if(req.session.user){
+	// 	return res.redirect('/');
+	// }
 	const user = new User();
 	if(await user.authenticate(req.body.userid, req.body.password)){
 		await forceRegenerateSession();
