@@ -51,7 +51,17 @@ router.get('/query', async (req, res) => {
 		},
 	}));
 });
+
+router.get('/:transactionId/', async (req, res) => {
+	const transaction = new Transaction();
+	const doc = (await transaction.findById({
+		id: req.params.transactionId,
+	})).Item;
+	if(req.session.user?.instituteId !== doc.instituteId){
+		return res.json('/404');
 	}
+	return res.json(doc);
+});
 
 function getFilterQuery({
 	instituteId,
@@ -97,15 +107,6 @@ function getFilterQuery({
 			query.ExpressionAttributeValues[':td'] = toDate;
 		}
 	}
-
-router.get('/:transactionId/', async (req, res) => {
-	if(req.session.user){
-		const transaction = new Transaction();
-		const doc = (await transaction.findById({
-			id: req.params.transactionId,
-		})).Item;
-		if(req.session.user?.instituteId !== doc.instituteId){
-			return res.json('/404');
 	if(status){
 		query.ExpressionAttributeNames['#s'] = 'status';
 		if ( status === "unresolved" ) {
@@ -122,10 +123,7 @@ router.get('/:transactionId/', async (req, res) => {
 			}
 			query.FilterExpression = `#s IN ( ${ exp.join(',') } )`;
 		}
-		return res.json(doc);
 	}
-	res.redirect('/404');
-});
 	return query;
 }
 
