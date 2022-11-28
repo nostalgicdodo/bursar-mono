@@ -14,7 +14,6 @@ import stylesheet from "~/routes/transaction.direct.css"
 
 
 
-// export async function loader () { return null }
 export async function loader ( { context } ) {
 	const { session } = context
 

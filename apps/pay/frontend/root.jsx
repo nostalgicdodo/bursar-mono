@@ -1,7 +1,7 @@
 
 import {
 	Links,
-	LiveReload,
+	// LiveReload,
 	Meta,
 	Outlet,
 	Scripts,
@@ -31,20 +31,28 @@ let microsoftTiles = [
 	{ name: "msapplication-TileColor", content: "#444444", key: "mst_1" },
 	{ name: "msapplication-TileImage", content: "/media/favicons/ms-icon-144x144.png", key: "mst_2" },
 ]
-let fonts = [
+export const fonts = [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
 	{ rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
 	{ rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" },
 	{ rel: "stylesheet", href: "https://fonts.googleapis.com/icon?family=Material+Icons" },
 ]
 
-let stylesheets = [
+export const stylesheets = [
 	normalizeStyles,
 	baseStyles,
 	gridStyles,
 	helperStyles,
 	stylescapeStyles,
+	loadingIndicatorStyles,
 ].map( styles => ({ rel: "stylesheet", type: "text/css", href: styles }) )
+
+export const baseLinks = [ ]
+	.concat( appleTouchIcons )
+	.concat( androidIcons )
+	.concat( icons )
+	.concat( manifest )
+	.concat( microsoftTiles )
 
 
 
@@ -70,12 +78,10 @@ export function meta () {
 }
 
 export function links () {
-	return [ ]
-		.concat( appleTouchIcons )
-		.concat( androidIcons )
-		.concat( icons )
-		.concat( manifest )
-		.concat( microsoftTiles )
+	// if ( ! inheritRootLayout() )
+	// 	return baseLinks;
+
+	return baseLinks
 		.concat( fonts )
 		.concat( stylesheets )
 }
@@ -110,9 +116,6 @@ function inheritRootLayout () {
 
 
 export default function App () {
-	if ( ! inheritRootLayout() )
-		return <Outlet />
-
 	return (
 		<html lang="en">
 			<head>

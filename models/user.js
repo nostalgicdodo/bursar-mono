@@ -41,6 +41,7 @@ class User extends DbHandler{
 	async create(doc){
 		doc.password = await this.encrypt(doc.password);
 		doc.resetPassword = true;
+		doc.id = doc.email.toLowerCase();
 		return super.create(doc);
 	}
 
@@ -53,8 +54,12 @@ class User extends DbHandler{
 		return super.save(doc);
 	}
 
-	async authenticate(userid, password){
-		return (await compareWithHash(password, (await this.findById(userid)).password));
+	async authenticate(userId, password){
+		const user = await this.findById(userId);
+		if (!user?.email) {
+			return false;
+		}
+		return (await compareWithHash(password, user.password));
 	}
 
 }

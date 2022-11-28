@@ -1,0 +1,32 @@
+
+/**
+ |
+ | Confirmation Proxy
+ |
+ |
+ */
+
+
+iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	z-index: 0;
+}
+
+.overlay {
+	width: 100%;
+	height: 100vh;
+	background-color: rgba( 173, 216, 230, 0.5 );
+	z-index: 1;
+}
+.overlay button {
+	position: absolute;
+	top: 69vh;
+	left: 33vw;
+	padding: 1.5rem 1rem;
+	background-color: blue;
+	z-index: 1;
+}

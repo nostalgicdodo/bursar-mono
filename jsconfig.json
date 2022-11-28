@@ -1,14 +1,19 @@
 {
+	"exclude": [
+		"build",
+		"node_modules"
+	],
 	"compilerOptions": {
-		"baseUrl": "./",
+		"strict": true,
+		// "checkJs": true,
+		"baseUrl": ".",
 		"paths": {
-            "@models/*": [ "./models/*"],
-            "@root/*": [ "./*" ],
-            "@lib/*": [ "./lib/*" ],
-            "@routes/*": [ "./routes/*" ]
+			"@root/*": [ "./*" ],
+			"@lib/*": [ "./lib/*" ],
+			"@models/*": [ "./models/*" ],
+			"@routes/*": [ "./routes/*" ],
+			"@ui/*": [ "./ui/*" ],
 		},
-
-		// Remix takes care of building everything in `remix build`.
 		"noEmit": true,
 		"allowJs": true,
 		"forceConsistentCasingInFileNames": true

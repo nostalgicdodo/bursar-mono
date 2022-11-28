@@ -1,0 +1,151 @@
+/*
+ *
+ *	Carousel
+ *
+ */
+
+.carousel {
+	width: 100%;
+	position: relative;
+	z-index: 1;
+}
+
+.carousel:before,
+.carousel:after {
+	pointer-events: none;
+	content: '';
+	display: inline-block;
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	bottom: 0;
+	width: calc((100vw - var(--container-width) ) / 2);
+}
+
+.carousel .carousel-list {
+	position: relative;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+	font-size: 0;
+	-webkit-overflow-scrolling: touch;
+	padding: 0 calc( (100vw - var(--container-width))/2 );
+	scroll-snap-type: x mandatory;
+}
+
+.carousel:before {
+	left: 0;
+	background-image: var(--fade-left);
+	opacity: 0.5;
+}
+
+.carousel:after {
+	right: 0;
+	background-image: var(--fade-right);
+	opacity: 0.5;
+}
+
+.carousel .carousel-list .carousel-list-item {
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	white-space: normal;
+	/*width: calc( 4 * var(--space-100) );*/
+	width: 100vw;
+	scroll-snap-align: center;
+}
+
+.carousel .carousel-list .carousel-list-item * { pointer-events:  none; }
+
+/* -- Base -- */
+.carousel .carousel-controls {
+	pointer-events: none;
+}
+
+.carousel .carousel-controls .prev,
+.carousel .carousel-controls .next {
+	pointer-events: all;
+}
+
+/* -- WhiteGold Carousel Overwrites -- */
+.carousel .carousel-list .carousel-list-item .carousel-card {
+	min-height: calc( var(--container-width) * 1.25 );
+	background-repeat: no-repeat;
+	background-size: var(--card);
+}
+.carousel .carousel-controls {
+	position: absolute;
+	z-index: 3;
+	top: 50%;
+	left: 0;
+	width: 100%;
+	height: auto;
+	transform: translateY(-50%);
+}
+
+.carousel .carousel-controls .carousel-button {
+	position: relative;
+	width: calc( (100vw - var(--container-width))/2 );
+	min-height: calc( var(--container-width) * 1.25 );
+	border-radius: 0;
+	background-color: transparent;
+	transition: opacity 0.15s ease-out;
+}
+.carousel .carousel-controls .carousel-button.fade-out {
+	opacity: 0.25;
+	cursor: auto;
+	transition: opacity 0.15s ease-in;
+}
+.carousel .carousel-controls .carousel-button .material-icons {
+	position: absolute;
+	z-index: 1;
+	top: 50%;
+	left: 50%;
+	width: auto;
+	transform: translate(-50%, -50%);
+}
+
+
+@media( min-width: 640px )  {
+	/* -- To Remove Scroll Bar on Non Mobile Screens, except for Safari -- */
+	.carousel .carousel-list {
+		overflow-x: hidden;
+		overflow-y: hidden;
+	}
+	/* -- Browser detection -- */
+	/* This media query detects Safari */
+	@media not all and ( min-resolution: 0.001dpcm ) {
+		.carousel .carousel-list {
+			overflow-x: auto;
+		}
+	}
+
+	.carousel .carousel-list .carousel-list-item .carousel-card {
+		background-size: calc( var(--card) * 1.5 );
+		min-height: calc( var(--container-width) * 0.75 );
+	}
+	.carousel .carousel-controls .carousel-button {
+		min-height: calc( var(--container-width) * 0.75 );
+	}
+}
+@media( min-width: 1040px ) {
+	.carousel .carousel-list .carousel-list-item .carousel-card {
+		background-size: calc( var(--card) * 1.75 );
+		min-height: calc( var(--container-width) * 0.5 );
+	}
+	.carousel .carousel-controls .carousel-button {
+		min-height: calc( var(--container-width) * 0.5 );
+	}
+}
+@media( min-width: 1480px ) {}
+
+
+/* -- Exception -- */
+.landing-carousel-section .carousel .carousel-list {
+	padding: 0;
+}
+
+/* -- END: Exception -- */

@@ -114,14 +114,15 @@ router.post('/juspay_callback', async (req, res) => {
 	});
 	req.session.transaction.doc = doc;
 	req.session.save();
-	res.redirect('/transaction/status');
+	res.redirect('/close-window');
 	// await transaction.save(doc);
 	// await updateTransactionStatus(doc, doc.status, doc.pgCallback, false);
 	// req.session.transaction.pgRedirect = false;
 });
 
 router.get('/juspay_initiate_transaction', async (req, res) => {
-	const { id: transactionId, status, amount, userId, userName } = req.session.transaction.doc;
+	const { id: transactionId, status, amount, userId, userName, refUniqueId } = req.session.transaction.doc;
+	const instituteShortId = req.session.institute.doc.shortId;
 
 	// If the transaction has gone past the "initiated" phase,
 	// 	then we musn't generate a new one
@@ -131,7 +132,7 @@ router.get('/juspay_initiate_transaction', async (req, res) => {
 
 	const doc = {
 		...req.session.transaction.doc,
-		pgOrderId: getPGOrderId(req.session.institute.doc.shortId, transactionId),
+		pgOrderId: getPGOrderId(instituteShortId, transactionId),
 	};
 	try{
 		doc.pgInitiationDetails =  await generateTransactionSession({
@@ -139,6 +140,8 @@ router.get('/juspay_initiate_transaction', async (req, res) => {
 			amount,
 			userId,
 			userName,
+			instituteId: instituteShortId,
+			refId: refUniqueId,
 		});
 	} catch(err){
 		return res.send(err);
