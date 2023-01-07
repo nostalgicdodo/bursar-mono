@@ -1,0 +1,50 @@
+
+/**
+ |
+ | Dashboard
+ |
+ |
+ */
+.content-layout {
+	display: grid;
+	grid-template-columns: repeat(
+		auto-fit,
+		minmax(
+			min( 200px, 100% ),
+			1fr
+		)
+	);
+	grid-row-gap: var(--space-50);
+	grid-column-gap: var(--space-50);
+}
+
+
+/**
+ | Stat Cards
+ |
+ */
+.stat-card {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	padding: var(--space-70);
+	max-width: 15.5rem;
+	min-height: 13.5rem;
+	border: var(--border-width-20) solid var(--color-border-neutral);
+	border-radius: var(--border-radius-30);
+	box-shadow: 0 5px 5px -2px var(--color-data-visualization-7);
+}
+.stat-card .stats {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-row-gap: var(--space-50);
+	grid-column-gap: var(--space-50);
+}
+
+@media ( min-width: 640px ) {
+
+}
+
+@media ( min-width: 1040px ) {
+
+}

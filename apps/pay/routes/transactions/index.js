@@ -49,7 +49,7 @@ router.get('/init', async (req, res) => {
 		delete req.session.institute.doc.logoImage;
 
 		if (req.session.transaction.doc.type === 0) {
-			return res.redirect('/transaction/direct');
+			res.redirect('/order/checkout');
 			return registerTransactionEvent({
 				trnId: transactionId,
 				type: 'session-created',

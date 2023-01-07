@@ -13,7 +13,7 @@ const SessionMiddleware = isProduction() ? Session({
 	resave: true,
 	name: getAppName(),
 	cookie: {
-		maxAge: 1000 * 60 * 15, // 15 minutes
+		maxAge: 1000 * 60 * 19, // 19 minutes
 		secure: true,
 		httpOnly: true,
 		sameSite: 'none',

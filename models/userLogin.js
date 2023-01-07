@@ -9,7 +9,7 @@ const Schema = {
 		],
 		AttributeDefinitions: [
 			{ AttributeName: 'id', AttributeType: 'S' },
-			{ AttributeName: 'date', AttributeType: 'S' },
+			{ AttributeName: 'datetime', AttributeType: 'S' },
 		],
 		ProvisionedThroughput: {
 			ReadCapacityUnits: 10,
@@ -17,7 +17,7 @@ const Schema = {
 		}
 	},
 	Fields: {
-		date: DbHandler.types.isDateString(),
+		datetime: DbHandler.types.isDateString(),
 		ip: DbHandler.types.isString(),
 		device: DbHandler.types.isString(),
 		success: DbHandler.types.isBool(),
