@@ -5,6 +5,6 @@ package-lock.json
 pnpm-lock.yaml
 
 # build directories
-/build
-/public/build
-/.cache
+/apps/*/build
+/apps/*/public/build
+/apps/*/.cache

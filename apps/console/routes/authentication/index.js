@@ -22,32 +22,32 @@ function forceRegenerateSession(req){
 }
 
 router.post('/login', async (req, res) => {
-	if(req.session.user){
-		res.redirect('/');
-	}
+	// if(req.session.user){
+	// 	return res.redirect('/');
+	// }
 	const user = new User();
-	if(await user.authenticate(req.body.userid, req.body.password)){
-		await forceRegenerateSession();
+	if(await user.authenticate(req.body.userId, req.body.password)){
+		await forceRegenerateSession(req);
 		req.session.user = user.doc.Item;
-		(new UserLogin()).create({
-			id: req.body.userid,
-			datetime: new Date().toISOString(),
-			ip: '',
-			device: '',
-			success: true,
-		});
-		return res.redirect('/');
+		// (new UserLogin()).create({
+		// 	id: req.body.userId,
+		// 	datetime: new Date().toISOString(),
+		// 	ip: '',
+		// 	device: '',
+		// 	success: true,
+		// });
+		return res.json({ok:true});
 	}
 	if(user.doc){
-		(new UserLogin()).create({
-			id: req.body.userid,
-			datetime: new Date().toISOString(),
-			ip: '',
-			device: '',
-			success: false,
-		});
+		// (new UserLogin()).create({
+		// 	id: req.body.userId,
+		// 	datetime: new Date().toISOString(),
+		// 	ip: '',
+		// 	device: '',
+		// 	success: false,
+		// });
 	}
-	res.redirect('/');
+	res.json({ok:false});
 });
 
 router.get('/logout', (req, res) => {

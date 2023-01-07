@@ -1,0 +1,56 @@
+
+/* :not(svg) {
+	transform-origin: 0px 0px;
+} */
+
+/* svg:not(:root) {
+	overflow: hidden;
+} */
+
+.loading-spinner svg {
+	overflow: hidden;
+}
+.loading-spinner svg * {
+	transform-origin: 0px 0px;
+}
+
+.loading-spinner svg {
+	animation-iteration-count: infinite;
+	animation-duration: 2s;
+	animation-name: spin;
+	animation-timing-function: linear;
+	pointer-events: none;
+}
+
+@keyframes spin {
+	100% {
+		transform: rotate( 360deg );
+	}
+}
+
+.loading-spinner svg circle {
+	animation-iteration-count: infinite;
+	animation-duration: 1.5s;
+	stroke-dasharray: 1, 150;
+	stroke-dashoffset: 0;
+	stroke-linecap: round;
+	animation-name: circleSpin;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes circleSpin {
+	0% {
+		stroke-dasharray: 1, 150;
+		stroke-dashoffset: 0;
+	}
+
+	50% {
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -35;
+	}
+
+	100% {
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -124;
+	}
+}

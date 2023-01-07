@@ -2,7 +2,7 @@
   "name": "bursar-mono",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pay": "npm -w apps/pay run",
@@ -17,37 +17,52 @@
     "apps/console"
   ],
   "dependencies": {
+    "@hookform/error-message": "^2.0.0",
     "@remix-run/express": "^1.5.1",
     "@remix-run/node": "^1.5.1",
     "@remix-run/react": "^1.5.1",
+    "@twilio-paste/core": "^14.1.0",
+    "@twilio-paste/design-tokens": "^8.0.0",
+    "@twilio-paste/icons": "^8.1.0",
+    "@twilio-paste/uid-library": "^0.2.5",
+    "@xstate/react": "^3.0.0",
     "aws-sdk": "^2.1092.0",
     "bcrypt": "^5.0.1",
+    "chart.js": "^3.9.1",
     "compression": "^1.7.4",
     "connect-redis": "^6.1.1",
     "cors": "^2.8.5",
+    "date-fns": "^2.29.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-session": "^1.17.2",
+    "json2csv": "^5.0.7",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
     "react": "<18.0.0",
+    "react-chartjs-2": "^4.3.1",
     "react-dom": "<18.0.0",
-    "react-loader-spinner": "^6.0.0-0",
+    "react-hook-form": "^7.34.1",
     "redis": "^4.0.4",
     "remix": "^1.5.1",
+    "remix-utils": "^3.3.0",
     "request": "^2.88.2",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "xstate": "^4.32.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.5.1",
     "eslint": "^8.10.0",
     "husky": "^7.0.4",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "npm-run-all": "^4.1.5"
   },
   "_moduleAliases": {
     "@models": "./models",
     "@routes": "./routes",
     "@lib": "./lib",
-    "@root": "./"
+    "@root": "./",
+    "^": "./"
   }
 }
