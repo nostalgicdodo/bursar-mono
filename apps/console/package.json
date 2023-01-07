@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "remix build",
     "dev-server": "SET NODE_ENV=development & nodemon",
     "start": "node app.js"
   },
