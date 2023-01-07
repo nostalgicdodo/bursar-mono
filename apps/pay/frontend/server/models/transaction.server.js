@@ -1,2 +1,2 @@
 
-export { default } from "^/models/transaction"
+export { default } from "@models/transaction"

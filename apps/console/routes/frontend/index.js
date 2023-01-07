@@ -5,7 +5,7 @@ const { createRequestHandler } = require( '@remix-run/express' );
 
 
 
-const BUILD_DIR = path.join( process.cwd(), 'build' );
+const BUILD_DIR = `${__dirname}/../../build`
 
 const router = express.Router();
 
@@ -18,6 +18,7 @@ router.use(
 // Everything else (like favicon.ico) is cached for an hour. You may want to be
 // more aggressive with this caching.
 router.use( express.static( 'public' , { maxAge: '1h' } ) );
+router.use( express.static( `${__dirname}/../../../../public` , { maxAge: '1h' } ) );
 
 
 
