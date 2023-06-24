@@ -1,39 +1,56 @@
-const { parse } = require('json2csv');
+const { Parser } = require('@json2csv/plainjs');
 const Transaction = require('@models/transaction');
 // const {transactionUserDetailsValidation} = require('./validations');
 const router = require('express').Router();
+const parserWithHeader = new Parser(getParserOptions());
+const parserWithoutHeader = new Parser({
+	...getParserOptions(),
+	header: false,
+});
 
 router.get('/list', async (req, res) => {
 	const trn = new Transaction();
 	let pageKey = req.query.page;
-	if (typeof pageKey === "string"){
+	if (typeof pageKey === 'string'){
 		try {
-			pageKey = JSON.parse( pageKey )
+			pageKey = JSON.parse( pageKey );
 		}
-		catch ( e ) {}
+		catch ( e ) {
+			console.error(e);
+		}
 	}
 
 	const query = getFilterQuery({
 		instituteId: req.session?.user?.instituteId || req.query?.instituteId,
-		fromDate: req.query[ "dateRange.start" ],
-		toDate: req.query[ "dateRange.end" ],
+		fromDate: req.query[ 'dateRange.start' ],
+		toDate: req.query[ 'dateRange.end' ],
 		status: req.query.status,
 		limit: req.query.limit,
 		nextPage: pageKey,
 		asc: req.query.asc ? true : false,
-	})
+	});
 
 	if (!req.query?.export) {
 		res.json(await trn.list(query));
 		return;
 	}
 
-	delete query.withPage;
-	query.noPage = true;
+	query.withPage = true;
 	query.limit = query.limit || 2000;
 	res.setHeader('Content-Type', 'text/csv');
 	res.setHeader('Content-Disposition', 'attachment;filename=payments_export.csv');
-	res.send(getExportCSV((await trn.list(query)).Items));
+	let headersDone = false;
+	let hasMoreEntries = true;
+	do{
+		const { Items, LastEvaluatedKey } = (await trn.list(query));
+		res.write(
+			(headersDone ? parserWithoutHeader : parserWithHeader)
+				.parse(Items) + '\n');
+		headersDone = true;
+		hasMoreEntries = LastEvaluatedKey ? true : false;
+		query.next = LastEvaluatedKey;
+	} while(hasMoreEntries);
+	res.end();
 });
 
 router.get('/query', async (req, res) => {
@@ -110,7 +127,7 @@ function getFilterQuery({
 	}
 	if(status){
 		query.ExpressionAttributeNames['#s'] = 'status';
-		if ( status === "unresolved" ) {
+		if ( status === 'unresolved' ) {
 			query.FilterExpression = 'NOT #s IN (:stval1, :stval2)';
 			query.ExpressionAttributeValues[':stval1'] = 'success';
 			query.ExpressionAttributeValues[':stval2'] = 'failed';
@@ -128,8 +145,8 @@ function getFilterQuery({
 	return query;
 }
 
-function getExportCSV(json){
-	return parse(json, {
+function getParserOptions(){
+	return {
 		fields: [
 			{
 				label: 'Initiated At',
@@ -164,7 +181,7 @@ function getExportCSV(json){
 				value: 'refId',
 			},
 		]
-	});
+	};
 }
 
 module.exports = router;
