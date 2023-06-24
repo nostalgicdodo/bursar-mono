@@ -77,7 +77,7 @@ router.get('/:transactionId/', async (req, res) => {
 		id: req.params.transactionId,
 	})).Item;
 	if(req.session.user?.instituteId !== doc.instituteId){
-		return res.json('/404');
+		return res.status(404).send('Not Found');
 	}
 	return res.json(doc);
 });
@@ -89,7 +89,7 @@ router.get('/:transactionId/events', async (req, res) => {
 		id: req.params.transactionId,
 	})).Item;
 	if(req.session.user?.instituteId !== doc.instituteId){
-		return res.json('/404');
+		return res.status(404).send('Not Found');
 	}
 	res.json((await transactionEvent.list({
 		FilterExpression: '#id > :idval',
