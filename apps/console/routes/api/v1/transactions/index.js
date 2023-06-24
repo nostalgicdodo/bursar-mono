@@ -1,5 +1,6 @@
 const { Parser } = require('@json2csv/plainjs');
 const Transaction = require('@models/transaction');
+const TransactionEvent = require('@models/transactionEvent');
 // const {transactionUserDetailsValidation} = require('./validations');
 const router = require('express').Router();
 const parserWithHeader = new Parser(getParserOptions());
@@ -79,6 +80,26 @@ router.get('/:transactionId/', async (req, res) => {
 		return res.json('/404');
 	}
 	return res.json(doc);
+});
+
+router.get('/:transactionId/events', async (req, res) => {
+	const transaction = new Transaction();
+	const transactionEvent = new TransactionEvent();
+	const doc = (await transaction.findById({
+		id: req.params.transactionId,
+	})).Item;
+	if(req.session.user?.instituteId !== doc.instituteId){
+		return res.json('/404');
+	}
+	res.json((await transactionEvent.list({
+		FilterExpression: '#id > :idval',
+		ExpressionAttributeNames:{
+			'#id': 'id',
+		},
+		ExpressionAttributeValues: {
+			':idval': req.params.transactionId,
+		},
+	})).Items);
 });
 
 function getFilterQuery({
