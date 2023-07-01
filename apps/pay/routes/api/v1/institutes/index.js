@@ -5,6 +5,7 @@ const { transactionRequestValidation,
 	transactionDetailsValidation } = require('./validations');
 const { jwtSign } = require('@lib/authentication');
 const { registerTransactionEvent } = require('@lib/helpers');
+const { getFilterQuery } = require('@lib/helpers/transactionQuery');
 
 async function generateTransactionUrl({protocol, hostname, id, instituteId, refId }){
 	return `${ protocol }://${ hostname }/transaction/init?request=${ await jwtSign({ id, instituteId, refId }) }`;
@@ -62,6 +63,35 @@ router.post('/:instituteId/create_transaction', authenticateInstitute, async (re
 		return res.status(400).json({
 			error
 		});
+	}
+});
+
+router.get('/:instituteId/transactions', authenticateInstitute, async(req, res) => {
+	const trn = new Transaction();
+	let pageKey = req.query.page;
+	if (typeof pageKey === 'string'){
+		try {
+			pageKey = JSON.parse( pageKey );
+		}
+		catch ( e ) {
+			res.status(401).json({error: 'Wrong page parameter'});
+			console.error(e);
+		}
+	}
+
+	const query = getFilterQuery({
+		instituteId: req.params.instituteId,
+		fromDate: req.query[ 'dateRange.start' ] || req.query.fromDate,
+		toDate: req.query[ 'dateRange.end' ] || req.query.toDate,
+		status: req.query.status,
+		limit: 100,
+		nextPage: pageKey,
+		asc: req.query.asc ? true : false,
+	});
+
+	if (!req.query?.export) {
+		res.json(await trn.list(query));
+		return;
 	}
 });
 

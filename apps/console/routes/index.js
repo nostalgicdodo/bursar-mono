@@ -40,6 +40,18 @@ router.use((req, res, next) => {
 	SessionMiddleware(req, res, next);
 });
 
+router.use((req, res, next) => {
+	if(req.headers['x-client']){
+		// const json = res.json;
+		res.json = function(response){
+			req.remixContext = {
+				response,
+			};
+			next();
+		};
+	}
+	next();
+});
 router.use('/api', require('./api'));
 router.use('/_d', require('@routes/diagnostics'));
 router.use('/auth', require('./authentication'));
