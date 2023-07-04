@@ -95,7 +95,7 @@ router.get('/:transactionId/events', async (req, res) => {
 		return res.status(404).send('Not Found');
 	}
 	res.json((await transactionEvent.list({
-		FilterExpression: '#id > :idval',
+		FilterExpression: '#id = :idval',
 		ExpressionAttributeNames:{
 			'#id': 'id',
 		},
