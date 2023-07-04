@@ -88,11 +88,7 @@ router.get('/:instituteId/transactions', authenticateInstitute, async(req, res) 
 		nextPage: pageKey,
 		asc: req.query.asc ? true : false,
 	});
-
-	if (!req.query?.export) {
-		res.json(await trn.list(query));
-		return;
-	}
+	res.json(await trn.list(query));
 });
 
 function generateResponse({status, refUniqueId, refId, id, userId, amount, expiresOn }){
