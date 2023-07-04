@@ -94,8 +94,8 @@ router.get('/:transactionId/events', async (req, res) => {
 	if(req.session.user?.instituteId !== doc.instituteId){
 		return res.status(404).send('Not Found');
 	}
-	res.json((await transactionEvent.list({
-		FilterExpression: '#id = :idval',
+	res.json((await transactionEvent.query({
+		KeyConditionExpression: '#id = :idval',
 		ExpressionAttributeNames:{
 			'#id': 'id',
 		},
