@@ -88,6 +88,8 @@ router.get('/:transactionId/events', async (req, res) => {
 	const transactionEvent = new TransactionEvent();
 	const doc = (await transaction.findById({
 		id: req.params.transactionId,
+		instituteId: req.query.instituteId,
+		refId: req.query.refId,
 	})).Item;
 	if(req.session.user?.instituteId !== doc.instituteId){
 		return res.status(404).send('Not Found');
