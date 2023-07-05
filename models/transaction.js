@@ -116,6 +116,7 @@ class Transaction extends DbHandler{
 		FilterExpression,
 		ExpressionAttributeNames,
 		ExpressionAttributeValues,
+		ProjectionExpression = undefined,
 		IndexName,
 		KeyConditionExpression,
 		ScanIndexForward,
@@ -133,6 +134,7 @@ class Transaction extends DbHandler{
 				},
 				Limit: limit,
 				ExclusiveStartKey: next,
+				ProjectionExpression,
 			});
 		}
 		return super.find({
@@ -145,6 +147,7 @@ class Transaction extends DbHandler{
 			IndexName,
 			KeyConditionExpression,
 			ScanIndexForward,
+			ProjectionExpression,
 		});
 	}
 
