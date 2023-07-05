@@ -88,6 +88,7 @@ router.get('/:instituteId/transactions', authenticateInstitute, async(req, res) 
 		nextPage: pageKey,
 		asc: req.query.asc ? true : false,
 	});
+	query.ProjectionExpression = 'id, refUniqueId, refId, userId, userName, userDetails, type, instituteId, amount, userMobile, userEmail, status, pgOrderId, createdAt, updatedAt';
 	const { Items, LastEvaluatedKey } = await trn.list(query)
 	res.json({
 		Items,
