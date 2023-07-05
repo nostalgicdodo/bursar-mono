@@ -71,7 +71,7 @@ router.get('/:instituteId/transactions', authenticateInstitute, async(req, res) 
 	let pageKey = req.query.page;
 	if (typeof pageKey === 'string'){
 		try {
-			pageKey = JSON.parse( pageKey );
+			pageKey = JSON.parse(Buffer.from(pageKey, 'base64').toString());
 		}
 		catch ( e ) {
 			res.status(401).json({error: 'Wrong page parameter'});
@@ -88,7 +88,13 @@ router.get('/:instituteId/transactions', authenticateInstitute, async(req, res) 
 		nextPage: pageKey,
 		asc: req.query.asc ? true : false,
 	});
-	res.json(await trn.list(query));
+	const { Items, LastEvaluatedKey } = await trn.list(query)
+	res.json({
+		Items,
+		page: LastEvaluatedKey ?
+			Buffer.from(JSON.stringify(LastEvaluatedKey)).toString('base64') :
+			undefined,
+	});
 });
 
 function generateResponse({status, refUniqueId, refId, id, userId, amount, expiresOn }){
