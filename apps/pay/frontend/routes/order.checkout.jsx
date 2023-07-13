@@ -257,10 +257,10 @@ export default function () {
 					</> }
 				</div>
 			</div>
-			<a className="fill-purple-1 space-50-top-bottom space-100-left-right" href="#section-payment-options">
+			<div className="fill-purple-1 space-50-top-bottom space-100-left-right">
 				<div className="bold label text-purple-2">Fee Amount { paymentVerificationState.matches( "idle" ) && "Due" }</div>
 				<div className="h5 strong text-purple-3">{order.amountFormatted}/- </div>
-			</a>
+			</div>
 		</div>
 
 		{ ( ! paymentFlowState.matches( "closed" ) ) && <>
