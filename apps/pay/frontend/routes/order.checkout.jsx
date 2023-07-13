@@ -126,6 +126,8 @@ export default function () {
 	React.useEffect( function () {
 		if ( redirectPayload )
 			return;
+		// if ( paymentFlowState.matches( "in-session" ) )
+		// 	return;
 
 		function promptBeforeUnloading ( event ) {
 			event.preventDefault()
@@ -137,7 +139,10 @@ export default function () {
 			window.onbeforeunload = null
 			window.removeEventListener( "beforeunload", promptBeforeUnloading, { capture: true } )
 		}
-	}, [ redirectPayload /* this would be set *right before* the page navigates away */ ] )
+	}, [
+		// paymentFlowState.matches( "in-session" ),
+		redirectPayload, /* this would be set *right before* the page navigates away */
+	] )
 
 	/*
 	 |
