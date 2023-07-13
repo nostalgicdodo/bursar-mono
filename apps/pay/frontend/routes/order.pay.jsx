@@ -61,18 +61,18 @@ export default function () {
 	 |
 	 |
 	 */
-	React.useEffect( function () {
-		function promptBeforeUnloading ( event ) {
-			event.preventDefault()
-			return "Are you sure? You might have to make the payment again from the start."
-		}
-		window.addEventListener( "beforeunload", promptBeforeUnloading, { capture: true } )
-		window.onbeforeunload = () => false
-		return () => {
-			window.onbeforeunload = null
-			window.removeEventListener( "beforeunload", promptBeforeUnloading, { capture: true } )
-		}
-	}, [ ] )
+	// React.useEffect( function () {
+	// 	function promptBeforeUnloading ( event ) {
+	// 		event.preventDefault()
+	// 		return "Are you sure? You might have to make the payment again from the start."
+	// 	}
+	// 	window.addEventListener( "beforeunload", promptBeforeUnloading, { capture: true } )
+	// 	window.onbeforeunload = () => false
+	// 	return () => {
+	// 		window.onbeforeunload = null
+	// 		window.removeEventListener( "beforeunload", promptBeforeUnloading, { capture: true } )
+	// 	}
+	// }, [ ] )
 
 	http.get( "/api/v1/transactions/juspay_initiate_transaction" )
 
