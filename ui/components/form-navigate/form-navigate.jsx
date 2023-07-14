@@ -18,13 +18,14 @@ export function FormNavigate ( { url, method, body } ) {
 		padding: 0,
 		clip: "rect(0 0 0 0)",
 		overflow: "hidden",
+		opacity: 0,
 	}
 
 	React.useEffect( function () {
 		domRef.current.submit()
 	}, [ ] )
 
-	return <form ref={domRef} method={method} encType="multipart/form-data" action={url} styles={styles}>
+	return <form ref={domRef} method={method} encType="multipart/form-data" action={url} style={styles}>
 		{ body.map( ([ k, v ], i) => <textarea key={i} name={k} defaultValue={v} /> ) }
 	</form>
 }
