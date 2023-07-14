@@ -109,6 +109,7 @@
 	}
 
 	.view .footer.small {
+		padding: var(--space-25) 16px;
 		/* box-shadow: 0 3px 7px 2px rgba( 0, 0, 0, 0.2 ); */
 	}
 
@@ -138,21 +139,26 @@
 		display: none;
 	}
 	.view .footer.medium {
+		margin: 0 auto var(--space-100);
+		width: 80%;
+		max-width: 900px;
+	}
+	.view .footer.medium .logos {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		padding-top: 0;
 	}
-		.view .footer.medium .institute-logo {
+		.view .footer.medium .logos .institute-logo {
 			margin-right: var(--space-75);
 			width: 65px;
 		}
-		.view .footer.medium .vd {
+		.view .footer.medium .logos .vd {
 			height: 25px;
 			width: 1px;
 			background-color: var(--neutral-3);
 		}
-		.view .footer.medium .bursar-logo {
+		.view .footer.medium .logos .bursar-logo {
 			margin-left: var(--space-75);
 			width: 125px;
 		}

@@ -20,6 +20,7 @@ export const PaymentVerificationMachine = createMachine( {
 		forLogs: null,
 		// this facilitates the log "actions" to work
 		logScope: "transactions",
+		sessionExpiresOn: null,
 		orderCreatedAt: null,
 		verificationAttempts: 0,
 		mostRecentOrderStatus: null,
@@ -77,10 +78,8 @@ export const PaymentVerificationMachine = createMachine( {
 }, {
 	guards: {
 		withinThresholdTime: function ( context ) {
-			const SEVENTEEN_MINUTES = 17 * 60 * 1000
-			const THRESHOLD_PERIOD = SEVENTEEN_MINUTES
-			const timeElapsedSinceOrderCreation = new Date - context.orderCreatedAt
-			return timeElapsedSinceOrderCreation < THRESHOLD_PERIOD
+			const timeRemainingInSession = context.sessionExpiresOn - ( new Date )
+			return timeRemainingInSession > 0
 		}
 	}
 } )

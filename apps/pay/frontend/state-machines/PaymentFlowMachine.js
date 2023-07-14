@@ -27,6 +27,7 @@ export const PaymentFlowMachine = createMachine( {
 		"determining-initial-state": {
 			always: [
 				{ target: "closed", cond: "paymentHasInitialised" },
+				{ target: "closed", cond: "sessionHasExpired" },
 				{ target: "initial" },
 			]
 		},
@@ -72,11 +73,23 @@ export const PaymentFlowMachine = createMachine( {
 		"closed": {
 			final: true
 		},
+		"terminated": {
+			final: true
+		},
 	},
+	on: {
+		TERMINATE_PAYMENT: {
+			target: "terminated",
+			actions: [ logTransition( "ui/payment-session/terminate" ) ]
+		}
+	}
 }, {
 	guards: {
 		paymentHasInitialised: context => {
 			return context.paymentHasInitialised
+		},
+		sessionHasExpired: context => {
+			return context.sessionExpiresOn <= Date.now()
 		},
 	}
 } )

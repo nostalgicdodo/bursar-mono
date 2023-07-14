@@ -4,9 +4,11 @@ import {
 	useLoaderData,
 } from "@remix-run/react"
 import * as React from "react"
+import { ClientOnly } from "remix-utils"
 
 import { useHTTP } from "@ui/hooks/http"
 import { LoadingIndicator } from "@ui/components/loading-indicator"
+import CountDownBar, { styles as CountDownBarStyles } from "~/components/countdown-bar"
 
 import stylesheet from "~/routes/order.pay.css"
 
@@ -25,12 +27,15 @@ export async function loader ( { context } ) {
 
 	// On reloading the child, close the child
 
+	const sessionExpiresOn = session.transaction.doc.expiresOn
+
 	const institute = {
 		name: session.institute.doc.name,
 		logoURL: session.institute.doc.name.toLowerCase().replace( /\s+/g, "-" ) + ".png"
 	}
 
 	return {
+		sessionExpiresOn,
 		institute,
 	}
 }
@@ -42,6 +47,7 @@ export const handle = {
 export function links () {
 	return [
 		stylesheet,
+		CountDownBarStyles,
 	].map( styles => ({ rel: "stylesheet", type: "text/css", href: styles }) )
 }
 
@@ -50,7 +56,7 @@ export function links () {
 
 
 export default function () {
-	const { institute } = useLoaderData()
+	const { sessionExpiresOn, institute } = useLoaderData()
 	const http = useHTTP()
 	const [ iframeLoaded, setIframeLoaded ] = React.useState( false )
 
@@ -90,13 +96,26 @@ export default function () {
 				</div>
 			</div>
 			<div className="footer small">
+				<ClientOnly>
+					{ () => <CountDownBar expiresOn={ sessionExpiresOn } message={ "Time remaining to make payment:" } endMessage={ "The session has expired." } onExpiry={ () => paymentFlowSend( "TERMINATE_PAYMENT" ) } className="" style={ { } } /> }
+				</ClientOnly>
 				<img src="/media/logos/bursar-powered-by.svg" alt="Powered by Bursar" />
 			</div>
 			<div className="footer medium">
+				<ClientOnly>
+					{ () => <CountDownBar expiresOn={ sessionExpiresOn } message={ "Time remaining to make payment:" } endMessage={ "The session has expired." } onExpiry={ () => paymentFlowSend( "TERMINATE_PAYMENT" ) } className="" style={ { } } /> }
+				</ClientOnly>
+				<div className="logos">
+					<img className="institute-logo" src={`/media/logos/${institute.logoURL}`} alt="Institute logo" />
+					<span className="vd"></span>
+					<img className="bursar-logo" src="/media/logos/bursar-powered-by.svg" alt="Powered by Bursar" />
+				</div>
+			</div>
+			{/* <div className="footer medium">
 				<img className="institute-logo" src={`/media/logos/${institute.logoURL}`} alt="Institute logo" />
 				<span className="vd"></span>
 				<img className="bursar-logo" src="/media/logos/bursar-powered-by.svg" alt="Powered by Bursar" />
-			</div>
+			</div> */}
 		</div>
 		{/* <div className="fixed-view">
 			<div className="logos">
