@@ -27,7 +27,7 @@ export async function loader ( { context } ) {
 
 	// On reloading the child, close the child
 
-	const sessionExpiresOn = session.transaction.doc.expiresOn
+	const sessionExpiresOn = ( new Date( session.transaction.doc.createdAt ) ).getTime() + ( 15 * 60 * 1000 )
 
 	const institute = {
 		name: session.institute.doc.name,

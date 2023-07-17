@@ -1,5 +1,5 @@
 const DbHandler = require('@lib/dbHandler');
-const MAX_TRANSACTION_SESSION_DURATION = 1000 * 60 * 15; // 15 minutes
+const MAX_TRANSACTION_SESSION_DURATION = 1000 * 60 * 60; // 60 minutes
 const Schema = {
 	TableName : 'Transaction',
 	KeyInfo: {

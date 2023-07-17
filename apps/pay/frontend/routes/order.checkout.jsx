@@ -53,7 +53,7 @@ export async function loader ( { request, params, context } ) {
 
 
 	context = {
-		sessionExpiresOn: session.transaction.doc.expiresOn,
+		sessionExpiresOn: ( new Date( session.transaction.doc.createdAt ) ).getTime() + ( 15 * 60 * 1000 ),
 		order: {
 			id: session.transaction.doc.id,
 			pgOrderId: session.transaction.doc.pgOrderId,
