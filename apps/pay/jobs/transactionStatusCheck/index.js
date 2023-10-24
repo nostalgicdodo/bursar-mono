@@ -15,7 +15,7 @@ async function main(){
 		},
 	}))?.Items || [];
 	if(trns.length > 0){
-		console.log('Transaction IDs:');
+		// console.log('Transaction IDs:');
 		for(const trn of trns){
 			console.log(trn.id);
 			await checkAndUpdateTrn({
@@ -25,7 +25,7 @@ async function main(){
 				from: 'cron',
 			});
 		}
-		console.log(`Total records pulled: ${ trns.length }`);
+		// console.log(`Total records pulled: ${ trns.length }`);
 	}
 }
 
