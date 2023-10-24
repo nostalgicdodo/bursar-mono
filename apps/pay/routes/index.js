@@ -14,6 +14,7 @@ const SessionMiddleware = isProduction() ? Session({
 	name: getAppName(),
 	cookie: {
 		maxAge: 1000 * 60 * 19, // 19 minutes
+			// ^ this has to be greater than the transaction session duration (in models/transaction.js)
 		secure: true,
 		httpOnly: true,
 		sameSite: 'none',
