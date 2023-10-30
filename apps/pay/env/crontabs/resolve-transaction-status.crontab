@@ -1,0 +1,11 @@
+
+JOB_NAME="resolve-transaction-status"
+PROJECT_DIR=/home/perl/sites/bursar
+NVM_DIR=/home/perl/.nvm
+VOLTA_HOME="/home/perl/.volta"
+PATH="$VOLTA_HOME/bin:$PATH"
+
+# If using volta
+* * * * * /home/perl/.volta/bin/node "$PROJECT_DIR/code/apps/pay/jobs/index.js" > "$PROJECT_DIR/logs/$JOB_NAME-out.log" 2>> "$PROJECT_DIR/logs/$JOB_NAME-err.log"
+# If using NVM
+# * * * * * [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && node "$PROJECT_DIR/code/apps/pay/jobs/index.js" > "$PROJECT_DIR/logs/$JOB_NAME-out.log" 2>> "$PROJECT_DIR/logs/$JOB_NAME-err.log"
