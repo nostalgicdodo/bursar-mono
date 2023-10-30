@@ -1,0 +1,17 @@
+{
+  "name": "archive-console-2023-10",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:remix": "remix build",
+    "jobs": "node jobs/index.js",
+    "dev:remix": "remix watch",
+    "dev:server": "nodemon --watch ./build/index.js",
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
