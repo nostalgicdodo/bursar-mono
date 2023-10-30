@@ -31,9 +31,12 @@ function TransactionLogs ( { className = "" } ) {
 		setCurrentPageKey,
 		pageKeys,
 		setPageKeys,
+
+		pageNumber,
+		setPageNumber,
 		isLastPage,
 
-		// filterParams,
+		filterParams,
 			setFilterParams,
 			resetFiltrationForm,
 
@@ -59,6 +62,7 @@ function TransactionLogs ( { className = "" } ) {
 				// Clear out the pagination state
 				setPageKeys( [ ] )
 				setCurrentPageKey( null )
+				setPageNumber( 1 )
 			} }
 			onReset={ resetFiltrationForm }
 			ref={ filtrationFormRef }
@@ -75,6 +79,7 @@ function TransactionLogs ( { className = "" } ) {
 				// Clear out the pagination state
 				setPageKeys( [ ] )
 				setCurrentPageKey( null )
+				setPageNumber( 1 )
 			} }
 			onReset={ resetSearchForm }
 			className="mt-50"
@@ -88,18 +93,20 @@ function TransactionLogs ( { className = "" } ) {
 		<TransactionsTable records={ records } className="mt-250 overflow-auto" />
 
 		<Pagination
-			current={ pageKeys.length }
+			current={ pageNumber }
 			onNext={ () => {
 				setCurrentPageKey( pageKeys[ pageKeys.length - 1 ] )
+				setPageNumber( v => v + 1 )
 			} }
 			onPrev={ () => {
 				if ( pageKeys.length <= 1 ) {
-						// ^ extra precaution
+					// ^ extra precaution
 					return
 				}
 				const pageKey = pageKeys[ pageKeys.length - 1 - 2 ] || null
 				setPageKeys( v => v.slice( 0, -2 ) )
 				setCurrentPageKey( pageKey )
+				setPageNumber( v => v - 1 )
 			} }
 			lastPage={ isLastPage }
 			isFetching={ isSearching }
@@ -120,6 +127,10 @@ function useSearch () {
 	const [ currentPageKey, setCurrentPageKey ] = React.useState( null )
 	const [ pageKeys, setPageKeys ] = React.useState( [ ] )
 
+	const [ pageNumber, setPageNumber ] = React.useState( 1 )
+		// ^ it is best to have dedicated state for this;
+		// 	attempting to derive the page nunber from
+		// 	`pageKeys.length` has a few gotchas
 	const [ isLastPage, setIsLastPage ] = React.useState( false )
 
 	/**
@@ -138,6 +149,8 @@ function useSearch () {
 		// 	// 	then do not re-set the pagination, triggering a fetching of records
 		// }
 		setPageKeys( [ ] )
+		setCurrentPageKey( null )
+		setPageNumber( 1 )
 	}, [ activeSearchWidget ] )
 
 	/**
@@ -156,6 +169,8 @@ function useSearch () {
 		// 	// 	then do not re-set the pagination, triggering a fetching of records
 		// }
 		setPageKeys( [ ] )
+		setCurrentPageKey( null )
+		setPageNumber( 1 )
 	}, [ activeSearchWidget ] )
 
 	const onRetrieval = React.useCallback( function ( { records, nextPageKey } ) {
@@ -163,6 +178,7 @@ function useSearch () {
 			setIsLastPage( true )
 		}
 		else {
+			setIsLastPage( false )
 			setPageKeys( v => v.concat( nextPageKey ) )
 		}
 	}, [ ] )
@@ -194,9 +210,12 @@ function useSearch () {
 		setCurrentPageKey,
 		pageKeys,
 		setPageKeys,
+
+		pageNumber,
+		setPageNumber,
 		isLastPage,
 
-		// filterParams,
+		filterParams,
 			setFilterParams,
 			resetFiltrationForm,
 

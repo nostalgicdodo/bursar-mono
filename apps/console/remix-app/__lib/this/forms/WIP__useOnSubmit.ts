@@ -10,6 +10,7 @@ import { getIssues } from "@/utils/validation/get-issues"
 import { isAnObject, isObjectNotEmpty } from "@/utils/type-checking/object"
 import { isAFunction, isNotAFunction } from "@/utils/type-checking/function"
 import { FunctionType } from "@/utils/typescript-types/common-types"
+import { waitFor } from "@/utils/clock/wait-for"
 
 
 
@@ -42,6 +43,21 @@ export default function useOnSubmit ( { messageTopic, validations, messages, for
 		 |
 		 */
 		formRef.current.setIsDisabled()
+
+		/* -
+		 | Persist the latest state
+		 |
+		 */
+		// Blur any of form input elements so that the latest state can be persisted
+		const currentlyActiveElement = document.activeElement
+		if ( document.activeElement ) {
+			document.activeElement.blur()
+		}
+		await waitFor( 0.001 )
+			// ^ so that the `blur` event handling can occur,
+			// 	and the input's value will be persisted
+			// 	to the form's state
+		currentlyActiveElement.focus()
 
 		/* _
 		 | Validate data
