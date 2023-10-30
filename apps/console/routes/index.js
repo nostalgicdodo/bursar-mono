@@ -13,7 +13,7 @@ const SessionMiddleware = isProduction() ? Session({
 	resave: true,
 	name: getAppName(),
 	cookie: {
-		maxAge: 1000 * 60 * 15, // 15 minutes
+		maxAge: 1000 * 60 * 60 * 24 * 7, // one week
 		secure: true,
 		httpOnly: true,
 		sameSite: 'none',
@@ -24,6 +24,9 @@ const SessionMiddleware = isProduction() ? Session({
 	saveUninitialized: false,
 	resave: true,
 	name: getAppName(),
+	cookie: {
+		maxAge: 1000 * 60 * 60 * 24 * 7, // one week
+	}
 });
 
 router.use(cors());
@@ -41,21 +44,28 @@ router.use((req, res, next) => {
 });
 
 router.use((req, res, next) => {
-	if(req.headers['x-client']){
-		// const json = res.json;
-		res.json = function(response){
-			req.remixContext = {
-				response,
-			};
+	if (req.query._source === 'ui') {
+		res.status = function (code) {
+			req.remixContext = req.remixContext ?? { };
+			req.remixContext.response = req.remixContext.response ?? { };
+			req.remixContext.response.code = code;
+			return res;
+		}
+		res.json = function (responseBody){
+			req.remixContext = req.remixContext ?? { };
+			req.remixContext.response = req.remixContext.response ?? { };
+			req.remixContext.response.body = responseBody
 			next();
 		};
 	}
+
 	next();
 });
 router.use('/api', require('./api'));
 router.use('/_d', require('@routes/diagnostics'));
 router.use('/auth', require('./authentication'));
-router.use(require('./frontend'));
+
+router.use(require('./remix'));
 
 if(isProduction()){
 	// eslint-disable-next-line no-unused-vars

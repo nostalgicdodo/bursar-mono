@@ -1,0 +1,30 @@
+{
+	"include": [ "remix.env.d.ts", "**/*.ts", "**/*.tsx" ],
+	"compilerOptions": {
+		"lib": [ "DOM", "DOM.Iterable", "ES2019" ],
+		"isolatedModules": true,
+		"esModuleInterop": true,
+		"jsx": "react-jsx",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"target": "ES2019",
+		"strict": true,
+		"allowJs": true,
+		"forceConsistentCasingInFileNames": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": [ "./remix-app/__lib/*" ],
+			"~/*": [ "./remix-app/*" ],
+			"^/*": [ "./*" ],
+			// these carry over from the project root jsconfig.json
+			"@root/*": [ "../../*" ],
+			"@lib/*": [ "../../lib/*" ],
+			"@models/*": [ "../../models/*" ],
+			"@routes/*": [ "../../routes/*" ],
+			"@ui/*": [ "../../ui/*" ]
+		},
+
+		// Remix takes care of building everything in `remix build`.
+		"noEmit": true
+	}
+}

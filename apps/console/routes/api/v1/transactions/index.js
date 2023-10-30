@@ -23,7 +23,7 @@ router.get('/list', async (req, res) => {
 	}
 
 	const query = getFilterQuery({
-		instituteId: req.session?.user?.instituteId || req.query?.instituteId,
+		instituteId: req.query?.instituteId || req.session?.user?.instituteId,
 		fromDate: req.query[ 'dateRange.start' ],
 		toDate: req.query[ 'dateRange.end' ],
 		status: req.query.status,
@@ -66,7 +66,7 @@ router.get('/query', async (req, res) => {
 			'#uid': 'userId',
 		},
 		ExpressionAttributeValues: {
-			':iid': req.session?.user?.instituteId || req.query?.instituteId,
+			':iid': req.query?.instituteId || req.session?.user?.instituteId,
 			':uid': req.query.s,
 		},
 	}));
@@ -79,9 +79,9 @@ router.get('/:transactionId/', async (req, res) => {
 		instituteId: req.query.instituteId,
 		refId: req.query.refId,
 	})).Item;
-	if(req.session.user?.instituteId !== doc.instituteId){
-		return res.status(404).send('Not Found');
-	}
+	// if(req.session.user?.instituteId !== doc.instituteId){
+	// 	return res.status(404).send('Not Found');
+	// }
 	return res.json(doc);
 });
 
@@ -93,9 +93,9 @@ router.get('/:transactionId/events', async (req, res) => {
 		instituteId: req.query.instituteId,
 		refId: req.query.refId,
 	})).Item;
-	if(req.session.user?.instituteId !== doc.instituteId){
-		return res.status(404).send('Not Found');
-	}
+	// if(req.session.user?.instituteId !== doc.instituteId){
+	// 	return res.status(404).send('Not Found');
+	// }
 	res.json((await transactionEvent.query({
 		KeyConditionExpression: '#id = :idval',
 		ExpressionAttributeNames:{
@@ -104,7 +104,7 @@ router.get('/:transactionId/events', async (req, res) => {
 		ExpressionAttributeValues: {
 			':idval': req.params.transactionId,
 		},
-	})).Items);
+	})));
 });
 
 function getParserOptions(){

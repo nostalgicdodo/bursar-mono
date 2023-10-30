@@ -50,13 +50,10 @@ router.post('/login', async (req, res) => {
 	res.json({ok:false});
 });
 
-router.get('/logout', (req, res) => {
-	if(req.session.user){
-		return req.session.destroy(() => {
-			res.redirect('/');
-		});
-	}
-	res.redirect('/');
+router.get('/logout', (req, res, next) => {
+	req.session.destroy(() => {
+		next();
+	});
 });
 
 module.exports = router;
