@@ -8,3 +8,6 @@ pnpm-lock.yaml
 /apps/*/build
 /apps/*/public/build
 /apps/*/.cache
+/archives/apps/*/build
+/archives/apps/*/public/build
+/archives/apps/*/.cache
