@@ -9,6 +9,8 @@
 import * as React from "react"
 import { useQuery, useMutation } from "@tanstack/react-query"
 
+import { FunctionType } from "@/utils/typescript-types/common-types"
+
 import { isEmpty } from "@/utils/type-checking/meta"
 import { isANonEmptyObject, isAnEmptyObject } from "@/utils/type-checking/object"
 import { isANonEmptyArray } from "@/utils/type-checking/array"
@@ -54,6 +56,7 @@ export type FormContext = {
 	onSubmit: ReturnType<typeof createFormSubmitHandler>;
 	issues: Record<string, string[]>;
 	setIssues: ReturnType<typeof React.useState<Record<string, string[]>>>[ 1 ];
+	issueHandler: FunctionType;
 }
 
 const FormContext = React.createContext<FormContext | null>( {
@@ -222,6 +225,7 @@ export const InternalFormContextProvider = React.forwardRef( function InternalFo
 		mutation,
 		issues,
 		setIssues,
+		issueHandler,
 		focusField,
 		// Form: React.useCallback( ({ children, ...props }) => <form onSubmit={ createFormSubmitHandler( submitHandler ?? noOp ) } { ...props }>{ children }</form>, [ ] )
 	}

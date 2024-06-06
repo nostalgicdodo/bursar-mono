@@ -40,6 +40,7 @@ export default function useOnSubmit ( { messageTopic, validations, getValidateOb
 				return previousIssues
 			} )
 			if ( thereAreIssues ) {
+				this.issueHandler( details )
 				return
 					// ^ don't submit the form
 			}
