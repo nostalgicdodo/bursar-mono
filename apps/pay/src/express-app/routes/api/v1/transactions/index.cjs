@@ -90,37 +90,37 @@ router.post('/register_event', (req, res) => {
 	res.redirect('/404');
 });
 
-router.post('/decentro_callback', async (req, res) => {
-	// if(!req.session.transaction.pgRedirect){
-	// 	return res.redirect('/404');
-	// }
-	if(req.session.transaction.doc.pgOrderId !== req.body.order_id){
-		return res.redirect('/404');
-	}
+// router.post('/decentro_callback', async (req, res) => {
+// 	// if(!req.session.transaction.pgRedirect){
+// 	// 	return res.redirect('/404');
+// 	// }
+// 	if(req.session.transaction.doc.pgOrderId !== req.body.order_id){
+// 		return res.redirect('/404');
+// 	}
 
-	// Now, proceed with processing the transaction status
-	const doc = {
-		...req.session.transaction.doc,
-		pgCallback: req.body,
-	};
-	registerTransactionEvent({
-		trnId: doc.id,
-		type: 'decentro-callback',
-		context: req.body,
-	});
-	// TODO::::::: check below function
-	doc.status = await checkAndUpdateTrn({
-		trn: doc,
-		redirect: false,
-		from: 'pgcallback'
-	});
-	req.session.transaction.doc = doc;
-	req.session.save();
-	res.redirect('/close-window');
-	// await transaction.save(doc);
-	// await updateTransactionStatus(doc, doc.status, doc.pgCallback, false);
-	// req.session.transaction.pgRedirect = false;
-});
+// 	// Now, proceed with processing the transaction status
+// 	const doc = {
+// 		...req.session.transaction.doc,
+// 		pgCallback: req.body,
+// 	};
+// 	registerTransactionEvent({
+// 		trnId: doc.id,
+// 		type: 'decentro-callback',
+// 		context: req.body,
+// 	});
+// 	// TODO::::::: check below function
+// 	doc.status = await checkAndUpdateTrn({
+// 		trn: doc,
+// 		redirect: false,
+// 		from: 'pgcallback'
+// 	});
+// 	req.session.transaction.doc = doc;
+// 	req.session.save();
+// 	res.redirect('/close-window');
+// 	// await transaction.save(doc);
+// 	// await updateTransactionStatus(doc, doc.status, doc.pgCallback, false);
+// 	// req.session.transaction.pgRedirect = false;
+// });
 
 router.post('/juspay_callback', async (req, res) => {
 	// if(!req.session.transaction.pgRedirect){
@@ -186,7 +186,11 @@ router.get('/decentro_initiate_transaction', async (req, res) => {
 	req.session.transaction.doc = doc;
 	// req.session.transaction.pgRedirect = true;
 	req.session.save();
-	res.json({transactionURL: doc.pgInitiationDetails?.data?.upi_uris?.common_uri || null, qr: doc.pgInitiationDetails?.qrCode });
+	res.json({
+		transactionURL: doc.pgInitiationDetails?.data?.upi_uris?.common_uri || null,
+		qr: doc.pgInitiationDetails?.qrCode,
+		uris: doc.pgInitiationDetails?.data?.upi_uris,
+	});
 	registerTransactionEvent({
 		trnId: transactionId,
 		type: 'decentro-initiated',
