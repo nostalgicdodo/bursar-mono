@@ -2,6 +2,7 @@
 import type { MetaFunction } from "@remix-run/node"
 
 import { useState } from "react"
+import { Link } from "@remix-run/react"
 import { ClientOnly } from "remix-utils/client-only"
 
 import CircularLoadingIndicator from "@/ui/react/components/loading-indictors/circular-loading-indicator.tsx"
@@ -10,6 +11,23 @@ import CountDownBar from "@/ui/react/components/countdown-bar"
 import { BursarLogo } from "@/this/ui/components/bursar-logo"
 import { ClientLogo } from "@/this/ui/components/client-logo"
 import { SiteFooter2 } from "@/this/ui/components/site-footer-2"
+import ButtonLess from "@/ui/react/components/buttons/button-less"
+
+
+const paymentProviders = [
+	{
+		name: "Google Pay",
+		logoPath: "google-pay.svg",
+	},
+	{
+		name: "PhonePe",
+		logoPath: "phone-pe.svg",
+	},
+	{
+		name: "PayTM",
+		logoPath: "pay-tm.svg",
+	},
+]
 
 export const meta: MetaFunction = () => {
 	return [
@@ -29,7 +47,7 @@ export default function () {
 				{ () => <CountDownBar expiresOn={ sessionExpiresOn } message={ "Time remaining to make payment:" } endMessage={ "The session has expired." } onExpiry={ () => {} } className="mt-100 px-25" /> }
 			</ClientOnly>
 			<PaymentCTASection className="mt-100" />
-			<PaymentSessionTimedOut className="mt-100 mx-auto" />
+			{/* <PaymentSessionTimedOut className="mt-100 mx-auto" /> */}
 			{/* <SiteFooter2 className="mt-75" /> */}
 		</div>
 		<div className="mt-100"></div>
@@ -70,18 +88,33 @@ function OrderInfo ( { className = "" } ) {
 
 function PaymentCTASection ( { className = "" } ) {
 	return <section className={ `p-50 border border-purple-2 bg-light rounded-50 ${ className }` }>
-		{/* <div className="column md:c-8 lg:c-6 p-50 border border-purple-2 bg-light rounded-50 text-left"> */}
-			<div className="h4 font-serif font-bold text-purple-2">Pay Full Amount, Now</div>
-			<div className="mt-75 flex justify-between">
-				<div className="c-5">
-					<div className="small font-bold text-purple-2">Total Fee Amount</div>
-					<div className="h5 font-bold text-purple-3">₹1/-</div>
-				</div>
-				<div className="c-6 md:c-4">
-					<ButtonPrimary size="small" removeClasses={[ "h-max" ]} className="w-full h-full">Make payment</ButtonPrimary>
-				</div>
-			</div>
-		{/* </div> */}
+		<h2 className="h4 font-serif font-bold text-purple-2">
+			Make Payment
+		</h2>
+		<div>
+			<p className="mt-50 h6 text-neutral-7">Select payment provider</p>
+			<ul className="mt-25 flex flex-wrap gap-25">
+				{ paymentProviders.map( ( { name, logoPath }, i ) => <li key={ i }>
+					<Link>
+						<figure className="p-25 border border-purple-2 rounded-25 hover:bg-purple-1">
+							<img src={ `/media/logos/payment-providers/${ logoPath }` } alt="" className="h-75" />
+							<figcaption className="sr-only">{ name }</figcaption>
+						</figure>
+					</Link>
+				</li> ) }
+			</ul>
+		</div>
+		<div className="mt-100 flex items-center gap-25">
+			<hr className="grow border border-purple-2 rounded-25" />
+			<p className="h5 uppercase">or</p>
+			<hr className="grow border border-purple-2 rounded-25" />
+		</div>
+		<div className="mt-75">
+			<p className="mt-50 h6 text-neutral-7 text-center -mb-75">Scan QR code</p>
+			<figure>
+				<img src="/media/other/qr-code-to-wikipedia.svg" alt="" className="mx-auto" />
+			</figure>
+		</div>
 	</section>
 }
 
@@ -96,14 +129,33 @@ function PaymentSessionTimedOut ( { className = "" } ) {
 				Do not <i>refresh</i> this page, hit the <i>back button</i>, or <i>close</i> this window.
 			</div>
 		</div>
-		<CircularLoadingIndicator className="w-350 pr-100 [&>span]:h3 [&>span:before]:border-transparent text-purple-2" />
+		{/* <CircularLoadingIndicator className="w-350 pr-100 [&>span]:h3 [&>span:before]:border-transparent text-purple-2" /> */}
 	</section>
 }
 
-// function Footer ( { className = "" } ) {
-// 	return <div className={ `flex justify-center items-center gap-x-75 ${ className }` }>
-// 		<ClientLogo name="Greendale Community College logo" logoURL="/media/logos/test-greendale-community-college.png" className="w-250" />
-// 		<span className="w-[1px] h-6 bg-neutral-3"></span>
-// 		<BursarLogo className="w-500" />
-// 	</div>
-// }
+
+
+
+
+/**
+ |
+ | REMOVE
+ |
+ |
+ */
+function PaymentCTASection__OldVersion ( { className = "" } ) {
+	return <section className={ `p-50 border border-purple-2 bg-light rounded-50 ${ className }` }>
+		{/* <div className="column md:c-8 lg:c-6 p-50 border border-purple-2 bg-light rounded-50 text-left"> */}
+			<div className="h4 font-serif font-bold text-purple-2">Pay Full Amount, Now</div>
+			<div className="mt-75 flex justify-between">
+				<div className="c-5">
+					<div className="small font-bold text-purple-2">Total Fee Amount</div>
+					<div className="h5 font-bold text-purple-3">₹1/-</div>
+				</div>
+				<div className="c-6 md:c-4">
+					<ButtonPrimary size="small" removeClasses={[ "h-max" ]} className="w-full h-full">Make payment</ButtonPrimary>
+				</div>
+			</div>
+		{/* </div> */}
+	</section>
+}

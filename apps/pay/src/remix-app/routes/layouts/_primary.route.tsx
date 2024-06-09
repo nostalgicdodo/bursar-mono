@@ -24,6 +24,7 @@ import { TaskQueueProvider } from "@/ui/react/context-providers/task-queue"
 import { useRootContext } from "@/ui/react/context-providers/root"
 
 import styles from "@/ui/stylesheets/tailwind.css?url"
+import { SiteFooter2 } from "@/this/ui/components/site-footer-2"
 
 
 
@@ -69,6 +70,7 @@ export default function PrimaryLayout ( { children }: { children: React.ReactNod
 								<div className={ `${ mainRegionDimensionStyles } relative top-0 w-full` } ref={ mainContentAreaRef }>
 									<Outlet />
 									{ children }
+									<SiteFooter2 className="mt-75 mb-100" />
 								</div>
 								<div className="max-md:mt-250">
 									<div id="sticky-region-bottom" className="fixed bottom-0 w-full z-50">
