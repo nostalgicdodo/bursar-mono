@@ -1,17 +1,17 @@
 
-import type { MetaFunction } from "@remix-run/node"
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 
 import { useState } from "react"
-import { Link } from "@remix-run/react"
+import { Link, useLoaderData } from "@remix-run/react"
 import { ClientOnly } from "remix-utils/client-only"
 
+import http from "@/utilities/http"
 import CircularLoadingIndicator from "@/ui/react/components/loading-indictors/circular-loading-indicator.tsx"
 import ButtonPrimary from "@/ui/react/components/buttons/button-primary"
 import CountDownBar from "@/ui/react/components/countdown-bar"
-import { BursarLogo } from "@/this/ui/components/bursar-logo"
 import { ClientLogo } from "@/this/ui/components/client-logo"
-import { SiteFooter2 } from "@/this/ui/components/site-footer-2"
 import ButtonLess from "@/ui/react/components/buttons/button-less"
+import { useQuery } from "@tanstack/react-query"
 
 
 const paymentProviders = [
@@ -27,7 +27,43 @@ const paymentProviders = [
 		name: "PayTM",
 		logoPath: "pay-tm.svg",
 	},
+	{
+		name: "CRED",
+		logoPath: "cred.png",
+	},
 ]
+
+export async function loader ( { request }: LoaderFunctionArgs ) {
+	const searchParams = ( new URL( request.url ) ).searchParams
+
+	if ( searchParams.get( "real" ) === "1" ) {
+		const qrCodeAPIResponse = await http.post( `https://${ process.env.DECENTRO_API_BASE_URL }/v3/payments/upi/qr`, {
+			reference_id: `TEST-0000-0000-${ Date.now() }`,
+			consumer_urn: process.env.DECENTRO_CONSUMER_URN,
+			amount: 15,
+			purpose_message: "test_hygience_01",
+			expiry_time: 30,
+			generate_custom_qr_image: false
+		}, {
+			headers: {
+				client_id: process.env.DECENTRO_CLIENT_ID,
+				client_secret: process.env.DECENTRO_CLIENT_SECRET,
+			}
+		} ).promise
+		const qrCodeURL = qrCodeAPIResponse?.data?.qr_image as string
+		const qrCodeHTML = await http.get( qrCodeURL ).promise
+
+		return {
+			qrCodeHTML
+		}
+	}
+	else {
+		return {
+			qrCodeHTML: null
+		}
+	}
+
+}
 
 export const meta: MetaFunction = () => {
 	return [
@@ -37,6 +73,7 @@ export const meta: MetaFunction = () => {
 
 export default function () {
 	const [ sessionExpiresOn, ] = useState( () => Date.now() + ( 15 * 60 * 1000 ) )
+	const loaderData = useLoaderData<typeof loader>()
 
 	return <div className="container py-200">
 		<div className="mx-auto md:c-8 lg:c-6">
@@ -46,7 +83,7 @@ export default function () {
 			<ClientOnly>
 				{ () => <CountDownBar expiresOn={ sessionExpiresOn } message={ "Time remaining to make payment:" } endMessage={ "The session has expired." } onExpiry={ () => {} } className="mt-100 px-25" /> }
 			</ClientOnly>
-			<PaymentCTASection className="mt-100" />
+			<PaymentCTASection qrCodeHTML={ loaderData.qrCodeHTML } className="mt-100" />
 			{/* <PaymentSessionTimedOut className="mt-100 mx-auto" /> */}
 			{/* <SiteFooter2 className="mt-75" /> */}
 		</div>
@@ -86,7 +123,18 @@ function OrderInfo ( { className = "" } ) {
 	</section>
 }
 
-function PaymentCTASection ( { className = "" } ) {
+function PaymentCTASection ( { qrCodeHTML, className = "" } ) {
+	// const query = useQuery( {
+	// 	queryKey: [ qrCodeURL ],
+	// 	queryFn: async function () {
+	// 		const qrCodeHTML = await http.get( qrCodeURL, { mode: "no-cors" } ).promise
+	// 		// fetch( "https://example.com/", { mode: "no-cors" } )
+	// 		console.log( qrCodeHTML )
+	// 		return qrCodeHTML
+	// 	}
+	// } )
+	const [ qrCodeImageData, ] = useState( () => qrCodeHTML?.match( /"(data:image.+)"/ )?.[ 1 ] )
+
 	return <section className={ `p-50 border border-purple-2 bg-light rounded-50 ${ className }` }>
 		<h2 className="h4 font-serif font-bold text-purple-2">
 			Make Payment
@@ -110,9 +158,10 @@ function PaymentCTASection ( { className = "" } ) {
 			<hr className="grow border border-purple-2 rounded-25" />
 		</div>
 		<div className="mt-75">
-			<p className="mt-50 h6 text-neutral-7 text-center -mb-75">Scan QR code</p>
+			<p className="mt-50 h6 text-neutral-7 text-center">Scan QR code</p>
 			<figure>
-				<img src="/media/other/qr-code-to-wikipedia.svg" alt="" className="mx-auto" />
+				{ qrCodeImageData && <img src={ qrCodeImageData } alt="" className="mx-auto mix-blend-multiply" /> }
+				{ !qrCodeImageData && <img src="/media/other/qr-code-to-wikipedia.svg" alt="" className="-mt-75 mx-auto mix-blend-multiply" /> }
 			</figure>
 		</div>
 	</section>

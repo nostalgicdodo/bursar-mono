@@ -1,7 +1,7 @@
 
 import { getProperty, deepKeys } from "dot-prop"
 
-import { isNullish } from "@/utils/type-checking/null-or-undefined"
+import { isNullish } from "@/utilities/type-checking/null-or-undefined"
 import { isAnObject } from "./type-checking/object"
 
 export default {
