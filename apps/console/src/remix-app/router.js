@@ -40,11 +40,18 @@ if ( process.env.NODE_ENV === "development" ) {
 }
 else {
 	const __dirPath = fileURLToPath( new URL( ".", import.meta.url ) )
-	const assetsDirectory = path.join( __dirPath, "../../build/client/assets" )
+
 	// Vite fingerprints its assets so we can cache forever
+	const assetsDirectory = path.join( __dirPath, "../../build/client/assets" )
 	router.use(
 		"/assets",
 		express.static( assetsDirectory, { immutable: true, maxAge: "1y" } )
+	)
+
+	const mediaDirectory = path.join( __dirPath, "../../public/media" )
+	router.use(
+		"/media",
+		express.static( mediaDirectory )
 	)
 }
 
