@@ -42,6 +42,14 @@ function getJuspayCreds(){
 	};
 }
 
+function getDecentroPaymentCreds(){
+	return {
+		url: process.env.DECENTRO_PAYMENT_URL,
+		client_id: process.env.DECENTRO_CLIENT_ID,
+		client_secret: process.env.DECENTRO_CLIENT_SECRET,
+	};
+}
+
 function getDecentroUrl(){
 	return process.env.DECENTRO_URL;
 }
@@ -103,6 +111,7 @@ module.exports = {
 	exceptionMailer,
 	getJWTSecret,
 	getJuspayCreds,
+	getDecentroPaymentCreds,
 	getDecentroUrl,
 	getDecentroAuthKeys,
 	getDecentroCreditTestAccount,

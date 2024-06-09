@@ -8,6 +8,7 @@ const { performCKYC,
 const {transactionUserDetailsValidation, registerEventValidation} = require('./validations/index.cjs');
 const PURPOSE = 'For education loan disbursement';
 const { generateTransactionSession } = require('@lib/juspay/index.cjs');
+const { generateDecentroTransactionSession } = require('@lib/decentro/index.cjs');
 const { checkAndUpdateTrn, registerTransactionEvent } = require('@lib/helpers/index.cjs');
 const WEBHOOK_JUSPAY_STATUS = ['CHARGED'];
 const router = require('express').Router();
@@ -89,6 +90,38 @@ router.post('/register_event', (req, res) => {
 	res.redirect('/404');
 });
 
+router.post('/decentro_callback', async (req, res) => {
+	// if(!req.session.transaction.pgRedirect){
+	// 	return res.redirect('/404');
+	// }
+	if(req.session.transaction.doc.pgOrderId !== req.body.order_id){
+		return res.redirect('/404');
+	}
+
+	// Now, proceed with processing the transaction status
+	const doc = {
+		...req.session.transaction.doc,
+		pgCallback: req.body,
+	};
+	registerTransactionEvent({
+		trnId: doc.id,
+		type: 'decentro-callback',
+		context: req.body,
+	});
+	// TODO::::::: check below function
+	doc.status = await checkAndUpdateTrn({
+		trn: doc,
+		redirect: false,
+		from: 'pgcallback'
+	});
+	req.session.transaction.doc = doc;
+	req.session.save();
+	res.redirect('/close-window');
+	// await transaction.save(doc);
+	// await updateTransactionStatus(doc, doc.status, doc.pgCallback, false);
+	// req.session.transaction.pgRedirect = false;
+});
+
 router.post('/juspay_callback', async (req, res) => {
 	// if(!req.session.transaction.pgRedirect){
 	// 	return res.redirect('/404');
@@ -118,6 +151,47 @@ router.post('/juspay_callback', async (req, res) => {
 	// await transaction.save(doc);
 	// await updateTransactionStatus(doc, doc.status, doc.pgCallback, false);
 	// req.session.transaction.pgRedirect = false;
+});
+
+router.get('/decentro_initiate_transaction', async (req, res) => {
+	const { id: transactionId, status, amount, userId, userName, refUniqueId } = req.session.transaction.doc;
+	const instituteShortId = req.session.institute.doc.shortId;
+	const attempt = req.query.attempt;
+
+	// If the transaction has gone past the "initiated" phase,
+	// 	then we musn't generate a new one
+	if (status !== 'initiated') {
+		return res.redirect('/404');
+	}
+
+	const doc = {
+		...req.session.transaction.doc,
+		pgOrderId: `${ getPGOrderId(instituteShortId, transactionId) }-${ attempt }`,
+	};
+	try{
+		doc.pgInitiationDetails =  await generateDecentroTransactionSession({
+			transactionId: doc.pgOrderId,
+			amount,
+			userId,
+			userName,
+			instituteId: instituteShortId,
+			refId: refUniqueId,
+			qr: req.query.qr,
+		});
+	} catch(err){
+		return res.send(err);
+	}
+	const transaction = new Transaction();
+	await transaction.save(doc);
+	req.session.transaction.doc = doc;
+	// req.session.transaction.pgRedirect = true;
+	req.session.save();
+	res.json({transactionURL: doc.pgInitiationDetails?.data?.upi_uris?.common_uri || null, qr: doc.pgInitiationDetails?.qrCode });
+	registerTransactionEvent({
+		trnId: transactionId,
+		type: 'decentro-initiated',
+		context: doc.pgInitiationDetails,
+	});
 });
 
 router.get('/juspay_initiate_transaction', async (req, res) => {
