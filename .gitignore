@@ -7,7 +7,9 @@ pnpm-lock.yaml
 # build directories
 /apps/*/build
 /apps/*/public/build
+/apps/*/cache
 /apps/*/.cache
 /archives/apps/*/build
 /archives/apps/*/public/build
+/archives/apps/*/cache
 /archives/apps/*/.cache

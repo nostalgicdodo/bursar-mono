@@ -2,16 +2,16 @@
 import type { Config } from "tailwindcss"
 
 import plugin from "tailwindcss/plugin"
-import tailwindForms from "@tailwindcss/forms"
-import headlessUI from "@headlessui/tailwindcss"
+// import tailwindForms from "@tailwindcss/forms"
+// import headlessUI from "@headlessui/tailwindcss"
 
-import sizeAndMeasurements from "./remix-app/__lib/ui/tailwind/sizes-and-measurements"
-import layoutSpacingAndShapes from "./remix-app/__lib/ui/tailwind/layout-spacing-and-shapes"
-import colors from "./remix-app/__lib/ui/tailwind/colors"
-import typography from "./remix-app/__lib/ui/tailwind/typography"
-import components from "./remix-app/__lib/ui/tailwind/components"
+import sizeAndMeasurements from "./src/remix-app/__lib/ui/tailwind/sizes-and-measurements"
+import layoutSpacingAndShapes from "./src/remix-app/__lib/ui/tailwind/layout-spacing-and-shapes"
+import colors from "./src/remix-app/__lib/ui/tailwind/colors"
+import typography from "./src/remix-app/__lib/ui/tailwind/typography"
+import components from "./src/remix-app/__lib/ui/tailwind/components"
 // Overrides
-import reactDayPicker from "./remix-app/__lib/ui/tailwind/overrides/react-day-picker"
+import reactDayPicker from "./src/remix-app/__lib/ui/tailwind/overrides/react-day-picker"
 
 
 
@@ -40,7 +40,7 @@ const corePluginsConfig = configurations.reduce( function ( acc, conf ) {
 
 
 export default {
-	content: [ "./remix-app/**/*.{js,jsx,ts,tsx}" ],
+	content: [ "./src/remix-app/**/*.{js,jsx,ts,tsx}" ],
 	theme: {
 		...themeConfig,
 		extend: themeExtensionsConfig,
@@ -48,8 +48,8 @@ export default {
 	darkMode: "class",
 	corePlugins: corePluginsConfig,
 	plugins: [
-		tailwindForms,
-		headlessUI,
+		// tailwindForms,
+		// headlessUI,
 		...(
 			configurations
 				.filter( c => c.plugins )
