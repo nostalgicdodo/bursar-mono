@@ -1,3 +1,9 @@
+
+# tmp
+/apps/template
+/apps/old-pay
+/apps/old-console
+
 .DS_Store
 
 node_modules
