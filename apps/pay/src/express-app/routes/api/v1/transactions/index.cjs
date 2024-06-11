@@ -156,7 +156,7 @@ router.post('/juspay_callback', async (req, res) => {
 router.get('/decentro_initiate_transaction', async (req, res) => {
 	const { id: transactionId, status, amount, userId, userName, refUniqueId } = req.session.transaction.doc;
 	const instituteShortId = req.session.institute.doc.shortId;
-	const attempt = req.query.attempt;
+	const attempt = req.query.attempt || 0;
 
 	// If the transaction has gone past the "initiated" phase,
 	// 	then we musn't generate a new one
