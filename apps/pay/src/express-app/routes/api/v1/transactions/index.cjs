@@ -172,8 +172,6 @@ router.get('/decentro_initiate_transaction', async (req, res) => {
 		doc.pgInitiationDetails =  await generateDecentroTransactionSession({
 			transactionId: doc.pgOrderId,
 			amount,
-			userId,
-			userName,
 			instituteId: instituteShortId,
 			refId: refUniqueId,
 			qr: req.query.qr,
