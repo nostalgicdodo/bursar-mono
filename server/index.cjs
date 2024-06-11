@@ -47,6 +47,7 @@ function getDecentroPaymentCreds(){
 		url: process.env.DECENTRO_PAYMENT_URL,
 		client_id: process.env.DECENTRO_CLIENT_ID,
 		client_secret: process.env.DECENTRO_CLIENT_SECRET,
+		consumer_urn: process.env.DECENTRO_CONSUMER_URN,
 	};
 }
 
